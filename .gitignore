@@ -1,0 +1,15 @@
+# Secrets
+.env
+**/.env
+
+# Runtime data / persisted volumes (never commit)
+**/config/
+**/db/
+**/etc-pihole/
+**/etc-dnsmasq/
+*.db
+*.log
+
+# OS noise
+.DS_Store
+Thumbs.db

@@ -1,0 +1,24 @@
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    hostname: pihole
+    restart: unless-stopped
+    ports:
+      - "53:53/tcp"          # DNS
+      - "53:53/udp"          # DNS
+      - "8080:80/tcp"        # admin UI: http://<server-ip>:8080/admin
+    environment:
+      - TZ=Asia/Riyadh
+      # Password is injected from the .env file (see .env.example) — never hard-code it.
+      - FTLCONF_webserver_api_password=${PIHOLE_PASSWORD}
+      - FTLCONF_dns_upstreams=1.1.1.1;8.8.8.8
+    volumes:
+      - ./etc-pihole:/etc/pihole
+    cap_add:
+      - NET_ADMIN
+      - SYS_TIME
+      - SYS_NICE
+
+# Before starting Pi-hole, free port 53 on the host (Ubuntu runs systemd-resolved
+# on 127.0.0.53:53). See docs/02-deployment.md.

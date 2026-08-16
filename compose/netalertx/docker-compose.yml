@@ -1,0 +1,22 @@
+services:
+  netalertx:
+    container_name: netalertx
+    image: ghcr.io/jokob-sk/netalertx:latest
+    # Host networking is required so the ARP scanner can see the whole LAN.
+    network_mode: host
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+      - NET_BIND_SERVICE
+    environment:
+      - TZ=Asia/Riyadh
+      - PORT=20211            # web UI: http://<server-ip>:20211
+    volumes:
+      - ./config:/data/config # NOTE: recent images use /data, not /app
+      - ./db:/data/db
+
+# ARP-flux sysctls cannot be set from compose when using network_mode: host.
+# Set them on the HOST instead (persist in /etc/sysctl.d/99-netalertx.conf):
+#   net.ipv4.conf.all.arp_ignore=1
+#   net.ipv4.conf.all.arp_announce=2
